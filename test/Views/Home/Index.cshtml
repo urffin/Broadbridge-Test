@@ -1,0 +1,25 @@
+﻿@model test.Models.TaskModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html ng-app="app" ng-csp="no-inline-style">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/ui-bootstrap-csp.css" rel="stylesheet" />
+    <link href="~/Content/styles.css" rel="stylesheet" />
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/angular-route.js"></script>
+    <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+    <script src="~/Scripts/app.js"></script>
+</head>
+<body >
+    <ng-view ></ng-view>
+</body>
+</html>

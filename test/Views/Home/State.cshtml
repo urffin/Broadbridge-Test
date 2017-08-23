@@ -1,0 +1,104 @@
+﻿<uib-tabset class="routes" vertical="true" type="pills" active="vm.activeTabIndex">
+    <uib-tab index="1" heading="Add new task">
+        <div ng-if="vm.activeTabIndex==1">
+            <h2>Add new task</h2>
+            <form name="addTask" novalidate ng-submit="vm.addTask()" ng-controller="addTask as vm">
+                <div class="form-group">
+                    <label for="Name">Name:</label>
+                    <input class="form-control" required type="text" ng-model="vm.task.name" id="Name" name="Name" value="" />
+                    <span ng-if="addTask.Name.$error.required">Enter Task name</span>
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description:</label>
+                    <input class="form-control" required type="text" ng-model="vm.task.description" name="Description" id="Description" value="" />
+                    <span ng-if="addTask.Description.$error.required">Enter Task description</span>
+                </div>
+                <div class="form-group">
+                    <label for="Priority">Priority:</label>
+                    <input class="form-control" type="text" required ng-model="vm.task.priority" name="Priority" id="Priority" value="" />
+                    <span ng-if="addTask.Priority.$error.required">Enter Task priority</span>
+                </div>
+                <div class="form-group">
+                    <label for="TimeToComplete">Time to complete:</label>
+                    <span class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm:ss" ng-model="vm.task.timeToComplete" datepicker-options="vm.dateOptions" is-open="dpopen" ng-required="true" name="TimeToComplete" id="TimeToComplete" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="dpopen=true"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </span>
+
+                    <span ng-if="addTask.TimeToComplete.$error.required">Enter Task time to complete</span>
+                </div>
+
+                <input class="btn btn-default" type="submit" name="name" value="add" /> <span ng-if="vm.successfully">Succesfully added</span>
+            </form>
+        </div>
+    </uib-tab>
+    <uib-tab index="2" heading="Task list">
+        <h2>Task list</h2>
+        <div ng-controller="listTask as vm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default" ng-click="vm.filter('all')">All</button>
+                        <button type="button" class="btn btn-default" ng-click="vm.filter('Active')">Active</button>
+                        <button type="button" class="btn btn-default" ng-click="vm.filter('Complete')">Complete</button>
+                    </div>
+                    <button type="button" class="btn btn-default pull-right" ng-click="vm.refresh()">Refresh</button>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th ng-repeat="column in ::vm.columns" ng-bind="::column.name"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="task in vm.filteredTasks" ng-click="vm.toggleDetails(task)">
+                        <td ng-bind="::task.Name"></td>
+                        <td ng-bind="::task.Priority"></td>
+                        <td ng-bind="::task.AddedTime | date:vm.settings.dateTime"></td>
+                        <td ng-bind="task.Status | statusName"></td>
+                        <td ng-bind="task | toTime"></td>
+                        <td>
+                            <button class="btn btn-default" ng-if="task.Status==1" ng-click="vm.complete(task, $event)">Complete</button>
+                            <button class="btn btn-danger" ng-if="task.Status==2" ng-click="vm.remove(task, $index,$event)">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <fieldset ng-if="vm.selectedTask">
+                <legend>Task details:</legend>
+                <div class="row">
+                    <label class="col-md-2">Name</label><span ng-bind="vm.selectedTask.Name"></span>
+                </div>
+                <div class="row">
+                    <label class="col-md-2">Description</label><span ng-bind="vm.selectedTask.Description"></span>
+                </div>
+                <div class="row">
+                    <label class="col-md-2">Status</label> <span ng-bind="vm.selectedTask.Status | statusName"></span>
+                </div>
+                <div class="row">
+                    <label class="col-md-2">Priority</label> <span ng-bind="vm.selectedTask.Priority"></span>
+                </div>
+                <div class="row">
+                    <label class="col-md-2">Added</label> <span ng-bind="vm.selectedTask.AddedTime | date:'yyyy-MM-dd HH:mm:ss'"></span>
+                </div>
+            </fieldset>
+        </div>
+    </uib-tab>
+    <uib-tab index="3" heading="User settings">
+        <h2>User settings</h2>
+        <form ng-controller="userSettings as vm" ng-submit="vm.updateSettings()">
+            <div class="form-group">
+                <label for="altRowColor">Alternative color:</label>
+                <input class="form-control" required type="text" ng-model="vm.settings.altRowColor" id="altRowColor" name="altRowColor"/>
+            </div>
+            <div class="form-group">
+                <label for="dateTime">Date time format:</label>
+                <input class="form-control" required type="text" ng-model="vm.settings.dateTime" id="dateTime" name="dateTime" />
+            </div>
+            <input class="btn btn-default" type="submit" name="name" value="update" /> <span ng-if="vm.successfully">Succesfully updated</span>
+        </form>
+    </uib-tab>
+</uib-tabset>
